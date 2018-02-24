@@ -1,0 +1,36 @@
+---
+title: "shape_file_ftp_site.Rmd"
+author: "GL Li"
+date: "January 28, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## url for download
+### by state: PLACE, TRACT
+```{r}
+url_place <- paste0(
+    "ftp://ftp2.census.gov/geo/tiger/TIGER2017/PLACE/tl_",
+    year, "_", STATE, "_place.zip"
+)
+
+url_tract <- paste0(
+    "ftp://ftp2.census.gov/geo/tiger/TIGER2017/TRACT/tl_",
+    year, "_", STATE, "_tract.zip"
+)
+```
+
+
+### national data: ZCTA5 
+```{r}
+url_ZCTA5 <- paste0(
+    "ftp://ftp2.census.gov/geo/tiger/TIGER2017/ZCTA5/tl_", year, "_us_zcta510.zip"
+) 
+
+url_cbsa <- paste0(
+    "ftp://ftp2.census.gov/geo/tiger/TIGER2017/CBSA/tl_", year, "_us_cbsa.zip"
+)
+```
