@@ -45,3 +45,32 @@ ggplot(df, aes(x = xx, y = yy)) +
     geom_polygon(aes(group = id), fill = NA, color = "red") +
     stat_test(data_replace = data_replace, aes(group = ..id..), fill = NA, color = "blue") +
     coord_cartesian(xlim = c(0, 2.7), ylim = c(-1, 3.2))
+
+
+
+# fuzzy matching headache ===============
+aaa <- function(aaaab = NULL, aaaa = NULL, aaaabc = NULL){
+    print(aaaa)
+    print(aaaab)
+    print(aaaabc)
+}
+
+aaa(aa = "aaa")
+
+
+# test passing ... to another function ========================
+# from doc, the seq is
+# seq(from = 1, to = 1, by = ((to - from)/(length.out - 1)),
+#     length.out = NULL, along.with = NULL, ...)
+
+# create a function that include by, length.out, along.with in ...
+seq_test <- function(from, to, ...){
+    2 * seq(from, to, ...)
+}
+
+seq_test(1, 10)
+    # [1]  2  4  6  8 10 12 14 16 18 20
+
+# new function takes argument by
+seq_test(1, 10, by = 2)
+    # [1]  2  6 10 14 18

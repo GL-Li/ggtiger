@@ -5,7 +5,7 @@
 \title{Download shape file with tigris and convert it to data.table with option
 to save as a csv file}
 \usage{
-download_shapefile(state, geo_header, year = 2017)
+download_shapefile(state = NULL, geography, year = 2016, ...)
 }
 \description{
 Download shape file with tigris and convert it to data.table with option

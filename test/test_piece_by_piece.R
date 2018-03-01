@@ -23,31 +23,78 @@ filldata <- read_acs5year(
     .[, .(GEOID, white_ratio)]
 
 
+#  paramerters case 1: feed bbox =====
+aaa = ggmap(ri)
+data = aaa$data
+data$x = data$lon
+data$y = data$lat
+state = NULL
+county = NULL
+N = 100
+geography = "county"
+year = 2016
+data_fill = NULL
+
+# parameters case 2: feed state and county ====
+state = "RI"
+county = c("providence", "kent")
+year = 2016
+geography = "tract"
+year = 2016
+data_fill = NULL
+
+# parameters case 3: feed state ====
+state = "RI"
+county = NULL
+year = 2016
+geography = "tract"
+year = 2016
+data_fill = NULL
+
+
+
 
 ggmap(ri) +
-    geom_boundary(geography = "state")
+    geom_boundary(geography = "state", fill = NA, color = "red")
+
+ggmap(ri) +
+    geom_boundary("place", fill = NA, color = "red")
+
+ggmap(ri) +
+    geom_boundary(geography = "county", fill = NA, color = "blue")
+
+ggmap(ri) +
+    geom_boundary(geography = "county", state = "RI", fill = NA, color = "blue")
 
 
+ggmap(ri) +
+    geom_boundary(geography = "tract", fill = NA, color = "red")
+
+
+ggmap(ri) +
+    geom_boundary("block group", fill = NA, color = "cyan")
 
 
 
 ggmap(ri) +
     geom_boundary("block group", fill = NA, color = "cyan",
-                  state = "RI", county = "Providence") +
-    geom_boundary("tract", state = "RI", fill = NA, color = "green") +
+                  state = "RI", county = c("providence", "kent"))
+
+ggmap(ri) +
+    geom_boundary("tract", state = "RI", fill = NA, color = "green")
+
+
+ggmap(ri) +
     geom_boundary("county", fill = NA, color = "blue") +
-    geom_boundary("state", fill = NA, color = "black")
-
-
+    geom_boundary("state", fill = NA, color = "black") +
     # in order to inherit data and x, y from ggmap, they must NOT be changed
     # in geom_boundary(). Then how to feed aes to polygon
-    geom_boundary(geography = "tract", geom = "polygon", data_fill = filldata,
+    geom_boundary(geography = "tract", data_fill = filldata,
                   color = "grey", size = 0.1, alpha = 0.8) +
     geom_boundary(geography = "county subdivision", state = "RI", color = "blue", fill = NA) +
     scale_fill_gradient(na.value = NA, low = "green", high = "red")
 
-ggmap(ri) +
-    geom_boundary("place", fill = NA, color = "red")
+
 
 
 

@@ -4,9 +4,10 @@
 \alias{geom_boundary}
 \title{Add census boudaries to ggmap}
 \usage{
-geom_boundary(mapping = NULL, data = NULL, geom = "polygon",
-  position = "identity", na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE, geometry, data_fill = NULL, year = 2016, ...)
+geom_boundary(geography, data_fill = NULL, year = 2016, state = NULL,
+  county = NULL, N = 100, mapping = NULL, data = NULL,
+  geom = "polygon", position = "identity", na.rm = FALSE,
+  show.legend = NA, inherit.aes = TRUE, ...)
 }
 \description{
 Add census boudaries to ggmap
