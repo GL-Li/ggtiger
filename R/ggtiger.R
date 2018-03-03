@@ -8,6 +8,6 @@
 #' @importFrom rgdal readOGR
 #' @importFrom RCurl getURL
 #' @importFrom ggplot2 fortify
-#' @importFrom stringr str_extract str_replace
+#' @importFrom stringr str_extract str_replace str_trim
 
 NULL

@@ -97,7 +97,7 @@ fips2name_state <- function(state_fips, type = "abbr"){
     # vector of state names
     fips_in <- data.table(fips = state_fips)
 
-    all_fips <- state.fips %>%
+    all_fips <- maps::state.fips %>%
         setDT() %>%
         .[, state := str_extract(polyname, "^[^:]*")] %>%
         .[, polyname := NULL] %>%
@@ -134,7 +134,7 @@ names2fips_state <- function(state_names, type = "abbr"){
     }
 
 
-    all_fips <- state.fips %>%
+    all_fips <- maps::state.fips %>%
         setDT() %>%
         .[, state := str_extract(polyname, "^[^:]*")] %>%
         .[, polyname := NULL] %>%
@@ -177,7 +177,7 @@ fips2names_county <- function(states, county_fips){
 
     fips_in = data.table(fips = county_fips, state = states)
 
-    all_fips <- county.fips %>%
+    all_fips <- maps::county.fips %>%
         setDT() %>%
         .[, fips := str_extract(fips, ".{3}$")] %>%
         .[, state := str_extract(polyname, "^[^,]*")] %>%

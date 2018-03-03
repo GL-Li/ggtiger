@@ -1,11 +1,12 @@
-Package: ggshapefile
+Package: ggtiger
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Draw and fill in TIGER boundaries on ggmap
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Guanglai Li
+Maintainer: Guanglai Li <liguanglai@gmail.com>
+Description: Draw and fill in TIGER boundaries on ggmap with a single function 
+    geom_bounday(). As an extension to ggplot2, geom_boundary() works similarly
+    to native ggplot2 geom_xxxx() functions.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
