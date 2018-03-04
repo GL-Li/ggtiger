@@ -49,7 +49,7 @@ We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The arg
 ``` r
 library(tidycensus)
 library(dplyr)
-census_api_key("ab664ab627f56ed01df0b97a25f6f473598a7fec")
+census_api_key("use your own census api key for work with tidycensus")
 # get the median home value in Providence county, RI by tract
 home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") %>%
     select(c("GEOID", "estimate"))
