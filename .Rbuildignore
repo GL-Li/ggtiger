@@ -7,3 +7,4 @@ examples
 README.Rmd
 ^.*\.png
 figures
+^\.travis\.yml$
