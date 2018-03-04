@@ -1,7 +1,15 @@
 # user functions ===============================================================
 
-#' Download shape file with tigris and convert it to data.table with option
-#' to save as a csv file
+#' Download shape file with tigris, convert it to data.tables and save them as
+#' csv files.
+#'
+#' @param state abbreviation of a state, such as "MA".
+#' @param geography geography of which shape files to download, such as "county"
+#'     and "block group".
+#' @param year year of the shape files updated
+#' @param ... ... parameters in tigris fucntions such as counties() and block_groups()
+#'
+#' @return a data.table, and saved csv files
 #'
 #' @export
 #'
@@ -54,9 +62,9 @@ download_shapefile <- function(state = NULL, geography, year = 2016, ...){
     # combined <- others[dt, on = .(id)] %>%
     #     # make group to deal with multiple states
     #     .[, group := paste0(group, "_", STATE)] %>%
-    #     .[, state := fips2name_state(STATE, "state")] %>%
+    #     .[, state := fips2names_state(STATE, "state")] %>%
     #     .[, county := fips2names_county(state, COUNTY)] %>%
-    #     .[, state := fips2name_state(STATE, "abbr")]
+    #     .[, state := fips2names_state(STATE, "abbr")]
     #
     #
     # # save as csv file for all counties and for individual counties
@@ -112,9 +120,9 @@ convert_shapefile <- function(shape, pre_geoid){
     combined <- others[dt, on = .(id)] %>%
         # make group to deal with multiple states
         .[, group := paste0(group, "_", STATE)] %>%
-        .[, state := fips2name_state(STATE, "state")] %>%
+        .[, state := fips2names_state(STATE, "state")] %>%
         .[, county := fips2names_county(state, COUNTY)] %>%
-        .[, state := fips2name_state(STATE, "abbr")]
+        .[, state := fips2names_state(STATE, "abbr")]
 }
 
 
@@ -178,8 +186,14 @@ download_counties <- function(year = 2016, ...){
     return(combined)
 }
 
-download_zipcode <- function(){
-    NULL
+download_zipcode <- function(year = year, ...){
+    cat("Downloading and unziping ZCTA5 data. Be patient ...")
+
+    options(tigris_use_cache = TRUE)    # needed for zip code data
+    shape <- tigris::counties(year = year, ...)
+    pre_geoid <- "86000US"  # in US file
+    # pre_geoid <- "87100US"  # in state file
+    combined <- convert_shapefile(shape, pre_geoid)
 }
 
 download_schooldistrict <- function(){

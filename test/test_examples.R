@@ -1,12 +1,7 @@
-
-
-library(ggshapefile)
+library(ggtiger)
 library(totalcensus)
 library(data.table)
 library(magrittr)
-library(stringr)
-library(maps)
-library(tigris)
 
 
 # example 1: RI ===============
@@ -25,30 +20,17 @@ filldata <- read_acs5year(
 
 
 ggmap(ri) +
-    geom_boundary(geography = "state")
-
-
-
-
-
-ggmap(ri) +
     geom_boundary("block group", fill = NA, color = "cyan",
                   state = "RI", county = "Providence") +
     geom_boundary("tract", state = "RI", fill = NA, color = "green") +
     geom_boundary("county", fill = NA, color = "blue") +
     geom_boundary("state", fill = NA, color = "black")
 
-
-    # in order to inherit data and x, y from ggmap, they must NOT be changed
-    # in geom_boundary(). Then how to feed aes to polygon
-    geom_boundary(geography = "tract", geom = "polygon", data_fill = filldata,
-                  color = "grey", size = 0.1, alpha = 0.8) +
-    geom_boundary(geography = "county subdivision", state = "RI", color = "blue", fill = NA) +
-    scale_fill_gradient(na.value = NA, low = "green", high = "red")
-
 ggmap(ri) +
-    geom_boundary("place", fill = NA, color = "red")
-
+    geom_boundary("tract", data_fill = filldata,
+                  color = "grey", size = 0.1, alpha = 0.8) +
+    geom_boundary("county subdivision", state = "RI", color = "blue", fill = NA) +
+    scale_fill_gradient(na.value = NA, low = "green", high = "red")
 
 
 # example 2: Providence ==============
@@ -83,10 +65,42 @@ ggmap(prov) +
     scale_fill_continuous(na.value = NA)
 
 # example 3: USA =====
-us <- get_map("united states", zoom = 8, color = "bw")
+us <- get_map("united states", zoom = 7, color = "bw")
 
 
 
 ggmap(us) +
-    geom_boundary("state", color = "red", fill = NA) +
-    geom_boundary("place", color = "green", fill = NA)
+    geom_boundary("county", color = "green", fill = NA) +
+    geom_boundary("state", color = "red", fill = NA)
+
+
+# DC, HI, and AK area =====================================
+dc <- get_map("district of columbia, USA", zoom = 12, color = "bw")
+ggmap(dc) +
+    geom_boundary("tract", fill = NA, color = "blue") +
+    geom_boundary("state", fill = NA, color = "red")
+
+
+ct <- get_map("connecticut, usa", zoom = 8, color = "bw")
+ggmap(ct) +
+    geom_boundary("tract", state = "CT", fill = NA, color = "red")
+
+
+hi <- get_map("hawaii, USA", zoom = 10, color = "bw")
+ggmap(hi) +
+    geom_boundary("county subdivision", state = "HI", fill = NA, color = "blue") +
+    geom_boundary("state", state = "HI", fill = NA, color = "red")
+
+
+ak <- get_map("alaska, USA", zoom = 5, color = "bw")
+ggmap(ak) +
+    geom_boundary("tract", state = "AK",
+                  county = c("Anchorage", "Matanuska-Susitna", "southeast fairbanks"),
+                  fill = NA, color = "blue") +
+    geom_boundary("state", state = "AK", fill = NA, color = "red")
+
+tx <- get_map("texas, USA", zoom = 6, color = "bw")
+ggmap(tx) +
+    geom_boundary("tract", state = "TX", fill = NA, color = "blue") +
+    geom_boundary("state", fill = NA, color = "red")
+

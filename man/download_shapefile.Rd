@@ -2,12 +2,25 @@
 % Please edit documentation in R/download_shapefiles.R
 \name{download_shapefile}
 \alias{download_shapefile}
-\title{Download shape file with tigris and convert it to data.table with option
-to save as a csv file}
+\title{Download shape file with tigris, convert it to data.tables and save them as
+csv files.}
 \usage{
 download_shapefile(state = NULL, geography, year = 2016, ...)
 }
+\arguments{
+\item{state}{abbreviation of a state, such as "MA".}
+
+\item{geography}{geography of which shape files to download, such as "county"
+and "block group".}
+
+\item{year}{year of the shape files updated}
+
+\item{...}{... parameters in tigris fucntions such as counties() and block_groups()}
+}
+\value{
+a data.table, and saved csv files
+}
 \description{
-Download shape file with tigris and convert it to data.table with option
-to save as a csv file
+Download shape file with tigris, convert it to data.tables and save them as
+csv files.
 }

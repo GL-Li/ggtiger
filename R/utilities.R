@@ -37,12 +37,12 @@ get_coord_names <- function(locations){
 
     # convert to state abbreviation
 
-    state_names <- data.table(
-        abbr = c(state.abb, "DC"),    # no DC in state.abb
-        state = tolower(c(state.name, "District of Columbia"))
-    )
+    # state_names <- data.table(
+    #     abbr = c(state.abb, "DC"),    # no DC in state.abb
+    #     state = tolower(c(state.name, "District of Columbia"))
+    # )
 
-    ans <- state_names[dt, on = .(state)] %>%
+    ans <- all_state_fips[dt, on = .(state)] %>%
         .[, .(abbr, county)]
     return(ans)
 }
@@ -86,7 +86,7 @@ keep_geoid <- function(dt, bbox){
 }
 
 
-fips2name_state <- function(state_fips, type = "abbr"){
+fips2names_state <- function(state_fips, type = "abbr"){
     # convert state fips to state names
     #
     # Args_____
@@ -97,21 +97,21 @@ fips2name_state <- function(state_fips, type = "abbr"){
     # vector of state names
     fips_in <- data.table(fips = state_fips)
 
-    all_fips <- maps::state.fips %>%
-        setDT() %>%
-        .[, state := str_extract(polyname, "^[^:]*")] %>%
-        .[, polyname := NULL] %>%
-        unique() %>%
-        .[, .(fips, abbr = abb, state)] %>%
-        # why no HI in the database
-        rbind(data.table(
-            fips = 15,
-            abbr = "HI",
-            state = "hawaii"
-        )) %>%
-        .[, fips := ifelse(fips < 10, paste0("0", fips), fips)]
+    # all_state_fips <- maps::state.fips %>%
+    #     setDT() %>%
+    #     .[, state := str_extract(polyname, "^[^:]*")] %>%
+    #     .[, polyname := NULL] %>%
+    #     unique() %>%
+    #     .[, .(fips, abbr = abb, state)] %>%
+    #     # why no HI and AK in the database
+    #     rbind(data.table(
+    #         fips = c(15, 2),
+    #         abbr = c("HI", "AK"),
+    #         state = c("hawaii", "alaska")
+    #     )) %>%
+    #     .[, fips := ifelse(fips < 10, paste0("0", fips), fips)]
 
-    state_name <- all_fips[fips_in, on = .(fips)] %>%
+    state_name <- all_state_fips[fips_in, on = .(fips)] %>%
         .[, get(type)]
     return(state_name)
 }
@@ -134,19 +134,19 @@ names2fips_state <- function(state_names, type = "abbr"){
     }
 
 
-    all_fips <- maps::state.fips %>%
-        setDT() %>%
-        .[, state := str_extract(polyname, "^[^:]*")] %>%
-        .[, polyname := NULL] %>%
-        unique() %>%
-        .[, .(fips, abbr = abb, state)] %>%
-        # why no HI in the database
-        rbind(data.table(
-            fips = 15,
-            abbr = "HI",
-            state = "hawaii"
-        )) %>%
-        .[, fips := ifelse(fips < 10, paste0("0", fips), fips)]
+    # all_fips <- maps::state.fips %>%
+    #     setDT() %>%
+    #     .[, state := str_extract(polyname, "^[^:]*")] %>%
+    #     .[, polyname := NULL] %>%
+    #     unique() %>%
+    #     .[, .(fips, abbr = abb, state)] %>%
+    #     # why no HI and AK in the database
+    #     rbind(data.table(
+    #         fips = c(15, 2),
+    #         abbr = c("HI", "AK"),
+    #         state = c("hawaii", "alaska")
+    #     )) %>%
+    #     .[, fips := ifelse(fips < 10, paste0("0", fips), fips)]
 
     if (type == "abbr"){
         state_fips <- all_fips[names_in, on = .(abbr)] %>%
@@ -177,21 +177,23 @@ fips2names_county <- function(states, county_fips){
 
     fips_in = data.table(fips = county_fips, state = states)
 
-    all_fips <- maps::county.fips %>%
-        setDT() %>%
-        .[, fips := str_extract(fips, ".{3}$")] %>%
-        .[, state := str_extract(polyname, "^[^,]*")] %>%
-        .[, county := str_extract(polyname, "[^,]*$")] %>%
-        .[, polyname := NULL] %>%
-        # county such as "san juan:lopez island" and "san juan:orcas island"
-        # has the same key (state, fips), keep only one of them
-        .[, county := str_extract(county, "^[^:]*")] %>%
-        unique() %>%
-        # still one duplicates "067, montana, park" and
-        # "067, montana, yellowstone national", keep only the later
-        .[!(fips == "067" & state == "montana" & county == "park")]
+#
+#
+#     all_fips <- maps::county.fips %>%
+#         setDT() %>%
+#         .[, fips := str_extract(fips, ".{3}$")] %>%
+#         .[, state := str_extract(polyname, "^[^,]*")] %>%
+#         .[, county := str_extract(polyname, "[^,]*$")] %>%
+#         .[, polyname := NULL] %>%
+#         # county such as "san juan:lopez island" and "san juan:orcas island"
+#         # has the same key (state, fips), keep only one of them
+#         .[, county := str_extract(county, "^[^:]*")] %>%
+#         unique() %>%
+#         # still one duplicates "067, montana, park" and
+#         # "067, montana, yellowstone national", keep only the later
+#         .[!(fips == "067" & state == "montana" & county == "park")]
 
-    county_name <-  all_fips[fips_in, on = .(state, fips)] %>%
+    county_name <-  all_county_fips[fips_in, on = .(state, fips)] %>%
         .[, county]
     return(county_name)
 }

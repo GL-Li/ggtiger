@@ -1,6 +1,6 @@
 #' Modified ggmap::ggmap() function
 #'
-#' The extent is default to "normal" and the xlim and ylim is set in `coord_map()` so
+#' The extent is default to "normal" and the xlim and ylim are set in `coord_map()` so
 #' they will not delete data outside the limits in added ggplot layers. All others are the
 #' same as ggmap::ggmap().
 #'
@@ -8,27 +8,19 @@
 #' @param ggmap an object of class ggmap (from function get_map)
 #' @param extent how much of the plot should the map take up?
 #'   "normal" (default), "device", or "panel"
-#' @param base_layer a ggplot(aes(...), ...) call; see examples
+#' @param base_layer a ggplot(aes(...), ...) call. The same as in the original ggmap().
 #' @param maprange logical for use with base_layer; should the map
-#'   define the x and y limits?
+#'   define the x and y limits? The same as in the original ggmap().
 #' @param legend "left", "right" (default), "bottom", "top",
 #'   "bottomleft", "bottomright", "topleft", "topright", "none"
-#'   (used with extent = "device")
+#'   (used with extent = "device"). The same as in the original ggmap().
 #' @param padding distance from legend to corner of the plot (used
-#'   with legend, formerly b)
+#'   with legend, formerly b). The same as in the original ggmap().
 #' @param darken vector of the form c(number, color), where number
 #'   is in [0, 1] and color is a character string indicating the
 #'   color of the darken.  0 indicates no darkening, 1 indicates a
-#'   black-out.
-#' @param b Deprecated, renamed to `padding`. Overrides any
-#'   `padding` argument.
-#' @param fullpage Deprecated, equivalent to `extent = "device"`
-#'   when `TRUE`. Overrides any `extent` argument.
-#' @param expand Deprecated, equivalent to `extent = "panel"`
-#'   when `TRUE` and `fullpage` is `FALSE`. When `fullpage`
-#'   is `FALSE` and `expand` is `FALSE`, equivalent to
-#'   `extent="normal"`. Overrides any `extent` argument.
-#' @param ... ...
+#'   black-out. The same as in the original ggmap().
+#' @param ... ... The same as in the original ggmap().
 #'
 #' @return a ggplot object
 #'

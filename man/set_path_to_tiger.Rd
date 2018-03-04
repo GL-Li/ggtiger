@@ -8,7 +8,7 @@ set_path_to_tiger(path = NULL)
 }
 \arguments{
 \item{path}{path to directory holding all downloaded and converted TIGER data, such as
-"E:/my_tiger_data" and "~/my_tiger_data".}
+"E:/my_tiger_data" and "~/tiger_data".}
 }
 \description{
 Set file path to directory storing downloaded and coverted TIGER data

@@ -1,8 +1,29 @@
 # user functions ==============================================================
 
-#' Add census boudaries to ggmap
+#' Draw census boudaries on ggmap
+#'
+#' @param geography geography of which boudaries to be drawn. Currently take
+#'     "state", "county", "county subdivision", "tract", "block group".
+#' @param data_fill data frame to fill in the boundaries. It has GEOID as the
+#'     first column and the values to fill as the second column.
+#' @param year year of the shape files updated.
+#' @param state abbreviation of a state within which boudaries are drawn, such as "RI".
+#' @param county vector of county names of the state, such as c("providence", "kent")
+#' @param N integer when state is NULL, N x N grid points on the view of map are
+#'     used to determine the states and counties within the view.
+#' @param mapping same as those in ggplot functions, typically inherited from ggmap()
+#' @param data data typically inherited from ggmap().
+#' @param geom same as those in ggplot2 functions but should be uisng "polygon".
+#' @param position same as those in ggplot2 functions.
+#' @param na.rm same as those in ggplot2 functions.
+#' @param show.legend same as those in ggplot2 functions.
+#' @param inherit.aes same as those in ggplot2 functions.
+#' @param ... same as those in ggplot2 functions.
+#'
+#' @return a ggplot2 object
 #'
 #' @export
+#'
 
 
 geom_boundary <- function(geography, data_fill = NULL, year = 2016,
@@ -37,10 +58,16 @@ StatBoundary <- ggproto(
     compute_group = function(data, scales,
                              params, geography, data_fill, year, state, county, N){
 
+
         if (Sys.getenv("PATH_TO_TIGER") == ""){
-            set_path_to_tiger()
+            Sys.setenv(PATH_TO_TIGER = tempdir())
+            message(paste(
+                "You can choose to save downloaded and processed data to your",
+                'computer. Please check function "set_path_to_tiger()" for details.'
+            ))
         }
         path_to_tiger <- Sys.getenv("PATH_TO_TIGER")
+
 
         if (!is.null(county)) county <- tolower(county)
 
@@ -111,6 +138,7 @@ StatBoundary <- ggproto(
         if (geography %in% c("county subdivision", "tract",
                              "block group")) {
 
+
             states <- state_county[, unique(abbr)]
 
             # process state by state
@@ -180,6 +208,17 @@ StatBoundary <- ggproto(
     }
 )
 
+
+#' Draw census boudaries on ggmap
+#'
+#' The same as geom_boundary()
+#'
+#' @param ... see all parameters in geom_boundary
+#'
+
+stat_boundary <- function(...){
+    geom_boundary(... = )
+}
 
 
 # internal functions ==============================================================

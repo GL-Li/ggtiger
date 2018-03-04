@@ -25,7 +25,7 @@ set_path_to_tiger("xxxxx/my_tiger_data")
 Examples
 --------
 
-By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap. We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map view. \#\#\# Draw boundaries
+By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap (for lower 48 states). We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map view. \#\#\# Draw boundaries
 
 ``` r
 library(ggtiger)
@@ -83,12 +83,21 @@ sb_black <- read_decennial(
 #> Reading IN file 03
 
 sb <- get_map("south bend, IN", zoom = 13, color = "bw")
-ggmap(sb) +
+p <- ggmap(sb) +
     geom_point(data = sb_black, alpha = 0.8,
                aes(lon, lat, size = population, color = black_pct)) +
     geom_boundary("tract", fill = NA, color = "orange", size = 0.5) +
-    scale_size_area(max_size = 10, breaks = c(10, 100, 200, 500)) +
-    scale_color_continuous(low = "green", high = "red")
+    scale_size_area(max_size = 20, breaks = c(10, 100, 200, 500, 4000)) +
+    scale_color_continuous(low = "green", high = "red") 
+p
 ```
 
 ![](README-unnamed-chunk-6-1.png)
+
+``` r
+
+# to zoom in
+p +  coord_map(xlim = c(-86.26, -86.21), ylim = c(41.67, 41.7))
+```
+
+![](README-unnamed-chunk-6-2.png)

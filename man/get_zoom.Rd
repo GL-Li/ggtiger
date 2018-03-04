@@ -7,7 +7,7 @@
 get_zoom(df)
 }
 \arguments{
-\item{df:}{data frame with two columns lon (or long) and lat, usually
+\item{df}{data frame with two columns lon (or long) and lat, usually
 generated from a shape file.}
 }
 \value{

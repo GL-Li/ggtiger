@@ -2,7 +2,7 @@
 
 #' get coordinate of center from data
 #'
-#' @param df: data frame with two columns lon (or long) and lat, usually
+#' @param df data frame with two columns lon (or long) and lat, usually
 #' generated from a shape file.
 #'
 #' @return a vector of coordinate c(long, lat)
@@ -23,7 +23,7 @@ get_center <- function(df){
 
 #' get bounding box from data
 #'
-#' @param df: data frame with two columns lon (or long) and lat, usually
+#' @param df data frame with two columns lon (or long) and lat, usually
 #' generated from a shape file.
 #'
 #' @return a vector of bounding box c(left, bottom, right, top)
@@ -46,7 +46,7 @@ get_bbox <- function(df){
 
 #' Get right zoom level for map range of data
 #'
-#' @param df: data frame with two columns lon (or long) and lat, usually
+#' @param df data frame with two columns lon (or long) and lat, usually
 #' generated from a shape file.
 #'
 #' @return an integer

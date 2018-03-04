@@ -2,7 +2,7 @@
 #'
 #'
 #' @param path path to directory holding all downloaded and converted TIGER data, such as
-#'     "E:/my_tiger_data" and "~/my_tiger_data".
+#'     "E:/my_tiger_data" and "~/tiger_data".
 #'
 #' @export
 
@@ -10,11 +10,10 @@ set_path_to_tiger <- function (path = NULL){
 
     # get user permission
     message(paste(
-        "Set path to the directory storing downloaded and coverted TIGER data.",
-        "You can choose to set a temporary path to the TIGER data and",
-        "use it for current R session only.",
-        "Or you can choose to set a permanent path for all future R sessions",
-        "by adding a vairable 'PATH_TO_TIGER' to your .Renviron file.\n"
+        "Set path to the directory storing downloaded and processed TIGER data",
+        "by adding a vairable 'PATH_TO_TIGER' to your .Renviron file.",
+        "If no path is set, the data will be saved to a temperory directory",
+        "that will not be available for future R sessions.\n"
     ))
 
     cat("Your choice:")

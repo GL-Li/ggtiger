@@ -7,7 +7,9 @@ Maintainer: Guanglai Li <liguanglai@gmail.com>
 Description: Draw and fill in TIGER boundaries on ggmap with a single function 
     geom_bounday(). As an extension to ggplot2, geom_boundary() works similarly
     to native ggplot2 geom_xxxx() functions.
-License: What license is it under?
+URL: https://github.com/GL-Li/ggtiger
+BugReports: https://github.com/GL-Li/ggtiger/issues
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:

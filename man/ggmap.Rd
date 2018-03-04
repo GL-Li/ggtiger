@@ -13,41 +13,30 @@ ggmap(ggmap, extent = "normal", base_layer, maprange = FALSE,
 \item{extent}{how much of the plot should the map take up?
 "normal" (default), "device", or "panel"}
 
-\item{base_layer}{a ggplot(aes(...), ...) call; see examples}
+\item{base_layer}{a ggplot(aes(...), ...) call. The same as in the original ggmap().}
 
 \item{maprange}{logical for use with base_layer; should the map
-define the x and y limits?}
+define the x and y limits? The same as in the original ggmap().}
 
 \item{legend}{"left", "right" (default), "bottom", "top",
 "bottomleft", "bottomright", "topleft", "topright", "none"
-(used with extent = "device")}
+(used with extent = "device"). The same as in the original ggmap().}
 
 \item{padding}{distance from legend to corner of the plot (used
-with legend, formerly b)}
+with legend, formerly b). The same as in the original ggmap().}
 
 \item{darken}{vector of the form c(number, color), where number
 is in [0, 1] and color is a character string indicating the
 color of the darken.  0 indicates no darkening, 1 indicates a
-black-out.}
+black-out. The same as in the original ggmap().}
 
-\item{...}{...}
-
-\item{b}{Deprecated, renamed to `padding`. Overrides any
-`padding` argument.}
-
-\item{fullpage}{Deprecated, equivalent to `extent = "device"`
-when `TRUE`. Overrides any `extent` argument.}
-
-\item{expand}{Deprecated, equivalent to `extent = "panel"`
-when `TRUE` and `fullpage` is `FALSE`. When `fullpage`
-is `FALSE` and `expand` is `FALSE`, equivalent to
-`extent="normal"`. Overrides any `extent` argument.}
+\item{...}{... The same as in the original ggmap().}
 }
 \value{
 a ggplot object
 }
 \description{
-The extent is default to "normal" and the xlim and ylim is set in `coord_map()` so
+The extent is default to "normal" and the xlim and ylim are set in `coord_map()` so
 they will not delete data outside the limits in added ggplot layers. All others are the
 same as ggmap::ggmap().
 }

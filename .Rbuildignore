@@ -5,3 +5,4 @@ test
 reading_materials
 examples
 README.Rmd
+^.*\.png
