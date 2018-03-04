@@ -25,7 +25,9 @@ set_path_to_tiger("xxxxx/my_tiger_data")
 Examples
 --------
 
-By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap (for lower 48 states). We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map view. \#\#\# Draw boundaries
+By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap (for lower 48 states). We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map view.
+
+### Draw boundaries
 
 ``` r
 library(ggtiger)
@@ -40,30 +42,32 @@ ggmap(ri) +
     geom_boundary("state", fill = NA, linetype = "dotted", color = "red", size = 0.5)
 ```
 
-![](README-unnamed-chunk-4-1.png)
+![](figures/boundaries.png)
 
 ### Fill in boudaries
 
-We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. The `GEOID` in the ?????? form such as `14000US44009051502`, `05000US25007`, and `06000US2502777010`. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
+We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. The `GEOID` in the long form such as `14000US44009051502`, `05000US25007`, and `06000US2502777010` or short form such as `44009051502`, `25007`, and `2502777010`. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
 
 ``` r
 library(tidycensus)
 library(dplyr)
-census_api_key("use your own census api key for work with tidycensus")
+census_api_key("ab664ab627f56ed01df0b97a25f6f473598a7fec")
 # get the median home value in Providence county, RI by tract
 home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") %>%
     select(c("GEOID", "estimate"))
 ggmap(ri) +
     geom_boundary("tract", data_fill = home_value, 
-                  color = "blue", size = 0.5, alpha = 0.8) +
+                  color = "blue", size = 0.1, alpha = 0.8) +
     geom_boundary("state", fill = NA, color = "red") +
     scale_fill_gradient(na.value = NA, low = "cyan", high = "orange") +
     labs(fill = "home_value")
 ```
 
-![](README-unnamed-chunk-5-1.png)
+![](figures/boundaries_with_fill.png)
 
 ### Combine with point plot
+
+Let's look at the black community near South Bend, Indiana. We present the population at each census block as a point, sized with total population and colored with percentage of black population. On top of that, we draw the boundaries of census tract.
 
 ``` r
 library(totalcensus)
@@ -78,9 +82,6 @@ sb_black <- read_decennial(
     # percentage of black population in each block
     .[, black_pct := round(100 * black_popul / population, 2)] %>%
     .[order(black_pct)]
-#> Reading IN geographic header record file
-#> Reading IN file 01 
-#> Reading IN file 03
 
 sb <- get_map("south bend, IN", zoom = 13, color = "bw")
 p <- ggmap(sb) +
@@ -92,12 +93,11 @@ p <- ggmap(sb) +
 p
 ```
 
-![](README-unnamed-chunk-6-1.png)
+![](figures/boundaries_with_point.png)
 
 ``` r
-
 # to zoom in
 p +  coord_map(xlim = c(-86.26, -86.21), ylim = c(41.67, 41.7))
 ```
 
-![](README-unnamed-chunk-6-2.png)
+![](figures/boundaries_with_point_zoom.png)
