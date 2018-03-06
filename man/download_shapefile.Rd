@@ -5,7 +5,8 @@
 \title{Download shape file with tigris, convert it to data.tables and save them as
 csv files.}
 \usage{
-download_shapefile(state = NULL, geography, year = 2016, ...)
+download_shapefile(state = NULL, geography, year = 2016,
+  starts_with = NULL, ...)
 }
 \arguments{
 \item{state}{abbreviation of a state, such as "MA".}

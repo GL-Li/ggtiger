@@ -29,6 +29,8 @@ By default, `geom_boundary()` draws all boundaries of a geography in the view of
 
 ### Draw boundaries
 
+Boundaries of state, county, county subdivision, tract, and block group
+
 ``` r
 library(ggtiger)
 ri <- get_map("scituate, RI, united states", zoom = 10, color = "bw")
@@ -44,6 +46,15 @@ ggmap(ri) +
 
 ![](figures/boundaries.png)
 
+Boundaries of zip code (zip code tabulation area, based on zip code):
+
+``` r
+ggmap(ri) +
+    geom_boundary("zip code", fill = "green", alpha = 0.3, color = "red")
+```
+
+![](figures/zip_code.png)
+
 ### Fill in boudaries
 
 We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. The `GEOID` in the long form such as `14000US44009051502`, `05000US25007`, and `06000US2502777010` or short form such as `44009051502`, `25007`, and `2502777010`. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
@@ -51,7 +62,7 @@ We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The arg
 ``` r
 library(tidycensus)
 library(dplyr)
-census_api_key("ab664ab627f56ed01df0b97a25f6f473598a7fec")
+census_api_key("use your own census api key")
 # get the median home value in Providence county, RI by tract
 home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") %>%
     select(c("GEOID", "estimate"))

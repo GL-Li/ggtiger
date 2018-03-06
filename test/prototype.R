@@ -2,13 +2,17 @@
 
 library(data.table)
 library(magrittr)
+library(sf)
+library(ggmap)
+library(dplyr)
 
 # test replacing default data frame with another one ===========================
-stat_test <- function(mapping = NULL, data = NULL, geom = "polygon",
+stat_test <- function(mapping = NULL, data = NULL,
                           position = "identity", na.rm = FALSE, show.legend = NA,
-                          inherit.aes = TRUE, data_replace = NULL, ...){
+                          inherit.aes = FALSE, data_replace = NULL, ...){
+    mapping$geometry <- "geometry"
     layer(
-        stat = StatTest, data = data, mapping = mapping, geom = geom,
+        stat = StatTest, data = data, mapping = mapping, geom = GeomSf,
         position = position, show.legend = show.legend, inherit.aes = inherit.aes,
         # all parameters inside list
         params = list(data_replace = data_replace,
@@ -19,13 +23,38 @@ stat_test <- function(mapping = NULL, data = NULL, geom = "polygon",
 
 StatTest <- ggproto(
     "StatTest", Stat,
-    required_aes = c("x", "y"),
+    required_aes = c("geometry"),
+    #default_aes = aes(geometry = ..geometry..),
     compute_group = function(data, scales,
                              params, data_replace){
-        names(data_replace) <- c("id", "x", "y")
+        #names(data_replace) <- c("id", "x", "y")
+
+        print(data_replace)
         data_replace
     }
 )
+
+
+ggmap(ri) + geom_boundary(data = NULL, data_replace = sf, inherit.aes = F)
+
+
+aaa = tigris::tracts("RI")
+sf = st_as_sf(aaa)
+
+%>%setDT()
+sf[, added := rnorm(244)]
+
+sf1 = st_as_sf(sf)
+
+ri = get_map("rhode island, usa", zoom = 12, color = "bw")
+ggmap(ri) + geom_sf(data = sf1, inherit.aes = F, aes(fill = added))
+
+
+
+
+ggmap(ri) + stat_test(data_replace = sf)
+
+
 
 
 ids <- factor(c("1.1", "2.1", "1.2", "2.2", "1.3", "2.3"))

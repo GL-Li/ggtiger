@@ -92,7 +92,8 @@ StatBoundary <- ggproto(
         }
 
 
-        # state ====
+        # state ---------------------------------------------------------------
+
         if (geography == "state"){
             states <- state_county[, unique(abbr)]
             file_names <- paste0(path_to_tiger, "/state/",
@@ -101,14 +102,13 @@ StatBoundary <- ggproto(
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "state", year = year) %>%
-                    # rename for inherited aes
-                    setnames(c("long", "lat"), c("x", "y")) %>%
-                    keep_geoid(bbox)
+                    .[state %in% states]
             }
         }
 
 
-        # county ====
+        # county----------------------------------------------------------------
+
         if (geography == "county"){
             states <- state_county[, unique(abbr)]
             file_names <- paste0(path_to_tiger, "/county/",
@@ -117,23 +117,67 @@ StatBoundary <- ggproto(
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "county", year = year) %>%
-                    # rename for inherited aes
-                    setnames(c("long", "lat"), c("x", "y")) %>%
                     keep_geoid(bbox)
             }
+
+            if (!is.null(county)){
+                dt <- dt[state_county, on = .(state = abbr, county)]
+            }
+
         }
 
 
 
 
+        # zip code -------------------------------------------------------------
 
         if (geography == "zip code"){
-            # need special treatment
-            NULL
+            if (!is.null(state) & is.null(county)){
+                starts_with <- state_zipstart[abbr == state, ZCTA5]
+            } else {
+                starts_with <- state_county_zipstart[state_county, on = .(abbr, county)] %>%
+                    .[, unique(ZCTA5)]
+            }
+
+            not_exist <- vector("character")
+            exist_file <- vector("character")
+            for (st in starts_with){
+                # only download whole file one time
+                file_name <- paste0(path_to_tiger, "/zcta/startwith_", st, "_", year, ".csv")
+                if (file.exists(file_name)){
+                    exist_file <- c(exist_file, file_name)
+                } else {
+                    not_exist <- c(not_exist, st)
+                }
+            }
+
+            if (length(exist_file) > 0){
+                dt_exist <- lapply(
+                    exist_file, fread, colClass = c("character", "numeric",
+                                                    "numeric", "character")
+                ) %>%
+                    rbindlist()
+            } else {
+                dt_exist <- NULL  # for rbindlist()
+            }
+            if (length(not_exist) > 0){
+                dt_not_exist <- download_zipcode(starts_with = not_exist, year = year)
+            } else {
+                dt_not_exist <- NULL
+            }
+
+            dt <- rbindlist(list(dt_exist, dt_not_exist)) %>%
+                keep_geoid(bbox)
+
         }
 
 
-        # others  ====
+
+
+
+
+        # others  --------------------------------------------------------------
+
         # include country subdivision, tract, and block group
         if (geography %in% c("county subdivision", "tract",
                              "block group")) {
@@ -154,8 +198,6 @@ StatBoundary <- ggproto(
                     dt <- get_existing(file_names, bbox)
                 } else {
                     dt <- download_shapefile(state = st, geography = geography, year = year) %>%
-                        # rename for inherited aes
-                        setnames(c("long", "lat"), c("x", "y")) %>%
                         keep_geoid(bbox)
                     if (sum(counties == "all_counties") == 0){
                         dt <- dt[county %in% counties]
@@ -170,7 +212,7 @@ StatBoundary <- ggproto(
 
 
 
-        # merge with data_fill
+        # merge with data_fill -------------------------------------------------
 
         if (is.null(data_fill)){
             # NA is is logic by default, have to be numeric
@@ -188,15 +230,15 @@ StatBoundary <- ggproto(
 
             # two types of GEOID, long as 14000US44009051502 and
             # short as 44009051502. Match dt and data_fill' GEOID
-            if (!all(grepl("US", data_fill$GEOID))){
-                dt[, GEOID := str_extract(GEOID, "[^(US)]*$")]
+            if (all(grepl("US", data_fill$GEOID))){
+                data_fill[, GEOID := str_extract(GEOID, "[^(US)]*$")]
             }
 
             dt <- setDT(data_fill) %>%
                 .[dt, on = .(GEOID)]
         }
 
-        # To plot polygon using ggshape package, group has to be a factor
+        # To plot polygon using ggtiger package, group has to be a factor
         # It is specific to polygon. Path do not need it. normal geom_polygon()
         # does not require factor either.
         dt[, group := factor(group)]
@@ -223,14 +265,10 @@ stat_boundary <- function(...){
 
 # internal functions ==============================================================
 get_existing <- function(file_names, bbox){
-    # dt <- fread(file_name, colClasses = "character") %>%
-    #     .[, x := as.numeric(long)] %>%
-    #     .[, y := as.numeric(lat)] %>%
-    #     keep_geoid(bbox)
     dt <- lapply(file_names, fread, colClasses = "character") %>%
         rbindlist() %>%
-        .[, x := as.numeric(long)] %>%
-        .[, y := as.numeric(lat)] %>%
+        .[, x := as.numeric(x)] %>%
+        .[, y := as.numeric(y)] %>%
         keep_geoid(bbox)
 }
 

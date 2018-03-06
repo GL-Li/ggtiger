@@ -45,6 +45,7 @@ set_path_to_tiger("xxxxx/my_tiger_data")
 By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap (for lower 48 states). We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map view.
 
 ### Draw boundaries
+Boundaries of state, county, county subdivision, tract, and block group
 ```{r fig.width=12}
 library(ggtiger)
 ri <- get_map("scituate, RI, united states", zoom = 10, color = "bw")
@@ -60,6 +61,15 @@ ggmap(ri) +
 ```
 
 ![](figures/boundaries.png)
+
+ Boundaries of zip code (zip code tabulation area, based on zip code):
+```{r}
+ggmap(ri) +
+    geom_boundary("zip code", fill = "green", alpha = 0.3, color = "red")
+
+```
+
+![](figures/zip_code.png)
 
 
 ### Fill in boudaries
