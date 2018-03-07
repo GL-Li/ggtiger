@@ -15,8 +15,7 @@
 #'
 
 
-download_shapefile <- function(state = NULL, geography, year = 2016,
-                               starts_with = NULL, ...){
+download_shapefile <- function(state = NULL, geography, year = 2016, ...){
     # download shape file of geography of one whole state,
     # individual county
 
@@ -48,7 +47,13 @@ download_shapefile <- function(state = NULL, geography, year = 2016,
 }
 
 #' Download zip code
-#' It is very different from others
+#'
+#' The zip code file is very different from others so need its own download
+#' function.
+#'
+#' @param starts_with The first two digits of zip codes, such as c("02", "99")
+#' @param year Year the shape file updated.
+#' @param ... ...
 #'
 #' @export
 #'

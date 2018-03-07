@@ -2,12 +2,18 @@
 % Please edit documentation in R/download_shapefiles.R
 \name{download_zipcode}
 \alias{download_zipcode}
-\title{Download zip code
-It is very different from others}
+\title{Download zip code}
 \usage{
 download_zipcode(starts_with = starts_with, year = year, ...)
 }
+\arguments{
+\item{starts_with}{The first two digits of zip codes, such as c("02", "99")}
+
+\item{year}{Year the shape file updated.}
+
+\item{...}{...}
+}
 \description{
-Download zip code
-It is very different from others
+The zip code file is very different from others so need its own download
+function.
 }
