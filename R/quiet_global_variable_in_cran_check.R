@@ -3,9 +3,6 @@
 #'
 NULL
 
-## quiets concerns of R CMD check re: the .'s that appear in pipelines
-# Also include function View from package utils. If imported to package, it
-# prevents openning data frame in RStudio but instead in a popup window.
 
 utils::globalVariables(unique(c(
     ".", "id", "group", "STATE", "state", "county", "COUNTY", "all_state_fips",

@@ -61,7 +61,6 @@ StatBoundary <- ggproto(
 
         if (Sys.getenv("PATH_TO_TIGER") == ""){
             Sys.setenv(PATH_TO_TIGER = tempdir())
-            original_path <- NULL
         }
         path_to_tiger <- Sys.getenv("PATH_TO_TIGER")
 
@@ -207,9 +206,9 @@ StatBoundary <- ggproto(
 
         }
 
-        if (is.null(original_path)){
+        if (grepl("/tmp/", Sys.getenv("PATH_TO_TIGER"))){
             message(paste0(
-                "You can choose to save downloaded and processed data to your ",
+                "You can choose to save processed data to your ",
                 'computer for future R sessions.\n',
                 'Please check with function "set_path_to_tiger()" for details.'
             ))

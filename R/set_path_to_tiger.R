@@ -1,4 +1,4 @@
-#' Set file path to directory storing downloaded and coverted TIGER data
+#' Set path to directory storing processed TIGER data
 #'
 #'
 #' @param path path to directory holding all downloaded and converted TIGER data, such as

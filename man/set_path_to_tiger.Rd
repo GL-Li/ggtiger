@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_path_to_tiger.R
 \name{set_path_to_tiger}
 \alias{set_path_to_tiger}
-\title{Set file path to directory storing downloaded and coverted TIGER data}
+\title{Set path to directory storing processed TIGER data}
 \usage{
 set_path_to_tiger(path = NULL)
 }
@@ -11,5 +11,5 @@ set_path_to_tiger(path = NULL)
 "E:/my_tiger_data" and "~/tiger_data".}
 }
 \description{
-Set file path to directory storing downloaded and coverted TIGER data
+Set path to directory storing processed TIGER data
 }
