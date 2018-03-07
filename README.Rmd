@@ -64,11 +64,16 @@ ggmap(ri) +
 
 ![](figures/boundaries.png)
 
- Boundaries of zip code (zip code tabulation area, based on zip code):
+ Boundaries of ZCTA (zip code tabulation area, based on zip code): be aware that ZCTAs sometimes cross county boundaries and even state boundaries.
 ```{r}
 ggmap(ri) +
-    geom_boundary("zip code", fill = "green", alpha = 0.3, 
-                  color = "red", size = 0.1)
+    # all ZCTAs in or partially in two counties in Rhode Island
+    geom_boundary("zip code", state = "RI", 
+                  county = c("providence", "washington"),
+                  fill = "green", alpha = 0.3, color = "red", size = 0.3) +
+    # all county boundaries in RI. 
+    geom_boundary("county", state = "RI", fill = NA, color = "green", 
+                  size = 0.5, linetype = "dotted")
 
 ```
 

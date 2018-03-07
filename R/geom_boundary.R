@@ -165,6 +165,19 @@ StatBoundary <- ggproto(
             dt <- rbindlist(list(dt_exist, dt_not_exist)) %>%
                 keep_geoid(bbox)
 
+
+            # further filter by state and county
+            if (!is.null(state) & !is.null(county)){
+                zipcode <- all_zipcode[state_county, on = .(abbr, county)] %>%
+                    .[, .(ZCTA5 = unique(ZCTA5))]
+                dt <- dt[zipcode, on = .(GEOID = ZCTA5)]
+            }
+            if (!is.null(state) & is.null(county)) {
+                zipcode <- all_zipcode[state_county, on = .(abbr)] %>%
+                    .[, .(ZCTA5 = unique(ZCTA5))]
+                dt <- dt[zipcode, on = .(GEOID = ZCTA5)]
+            }
+
         }
 
 

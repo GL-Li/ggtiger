@@ -81,3 +81,24 @@
 #'
 
 "state_county_zipstart"
+
+
+#' all zip code in each county
+#'
+#'
+#' @format A data.table with 172 rows and 2 variables
+#' \describe{
+#'   \item{abbr}{abbreviation of state}
+#'   \item{county}{county name}
+#'   \item{ZCTA5}{ZCTA5}
+#' }
+#'
+#' @docType data
+#'
+#'
+#' @format data.table
+#'
+#' @keywords datasets
+#'
+
+"all_zipcode"
