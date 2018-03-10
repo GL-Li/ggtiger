@@ -55,7 +55,7 @@ ggmap(ri) +
     # all ZCTAs in or partially in two counties in Rhode Island
     geom_boundary("zip code", state = "RI", 
                   county = c("providence", "washington"),
-                  fill = "green", alpha = 0.3, color = "red", size = 0.3) +
+                  fill = "blue", alpha = 0.1, color = "red", size = 0.3) +
     # all county boundaries in RI. 
     geom_boundary("county", state = "RI", fill = NA, color = "green", 
                   size = 0.5, linetype = "dotted")

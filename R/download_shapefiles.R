@@ -145,7 +145,7 @@ download_states <- function(year = 2016, ...){
     for (st in states){
         dt_st <- combined[state == st]  %>%
             # keep only needed for plotting
-            .[, .(GEOID, x, y, group)]
+            .[, .(GEOID, state, x, y, group)]
         file_name <- paste0(path_to_state, "/", "state_", st, "_", year, ".csv")
         cat(paste0("Saving ", file_name, " ...\n"))
         fwrite(dt_st, file = file_name)
@@ -221,7 +221,7 @@ download_others <- function(state = NULL, geography, year = 2016, ...){
     for (st in states){
         # save for whole state
         dt_st <- combined[state == st] %>%
-            .[, .(GEOID, x, y, group)]
+            .[, .(GEOID, state, county, x, y, group)]
         file_name <- paste0(path_to_geography, "/",
                             tolower(str_replace(geography, " ", "_")),
                             "_", st, "_", year, "_", "all_counties.csv")
@@ -231,7 +231,7 @@ download_others <- function(state = NULL, geography, year = 2016, ...){
         counties <- combined[state == st, unique(county)]
         for (ct in counties) {
             dt_county <- combined[state == st & county == ct] %>%
-                .[, .(GEOID, x, y, group)]
+                .[, .(GEOID, state, county, x, y, group)]
             file_name <- paste0(path_to_geography, "/",
                                 tolower(str_replace(geography, " ", "_")),
                                 "_", st, "_", year, "_", ct, ".csv")

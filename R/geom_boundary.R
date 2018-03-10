@@ -58,8 +58,12 @@ StatBoundary <- ggproto(
     compute_group = function(data, scales,
                              params, geography, data_fill, year, state, county, N){
 
-
         if (Sys.getenv("PATH_TO_TIGER") == ""){
+            message(paste0(
+                "\nYou can choose to save processed data to your ",
+                'computer for future R sessions.\n',
+                'Please check with function "set_path_to_tiger()" for details.'
+            ))
             Sys.setenv(PATH_TO_TIGER = tempdir())
         }
         path_to_tiger <- Sys.getenv("PATH_TO_TIGER")
@@ -84,6 +88,14 @@ StatBoundary <- ggproto(
             state_county <- data.table(
                 abbr = state,
                 county = county
+            )
+        }
+
+        # maps::map.where does work in AK and HI, use all counties
+        if (nrow(state_county) == 0){
+            state_county <- data.table(
+                abbr = c("HI", "AK"),
+                county = "all_counties"
             )
         }
 
@@ -118,6 +130,8 @@ StatBoundary <- ggproto(
 
             if (!is.null(county)){
                 dt <- dt[state_county, on = .(state = abbr, county)]
+            } else if (!is.null(state)){
+                dt <- dt[state_county, on = .(state = abbr)]
             }
 
         }
@@ -219,13 +233,15 @@ StatBoundary <- ggproto(
 
         }
 
-        if (grepl("/tmp/", Sys.getenv("PATH_TO_TIGER"))){
-            message(paste0(
-                "You can choose to save processed data to your ",
-                'computer for future R sessions.\n',
-                'Please check with function "set_path_to_tiger()" for details.'
-            ))
-        }
+        # tempdir(): ubuntu has "/tmp/", windows has "\\Temp", mac has ???, too
+        # compilcated.
+        # if (grepl("/tmp/|\\Temp|/temp/|/TEMP/", Sys.getenv("PATH_TO_TIGER"))){
+        #     message(paste0(
+        #         "You can choose to save processed data to your ",
+        #         'computer for future R sessions.\n',
+        #         'Please check with function "set_path_to_tiger()" for details.'
+        #     ))
+        # }
 
 
         # merge with data_fill -------------------------------------------------

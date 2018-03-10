@@ -10,7 +10,7 @@ library(stringr)
 
 
 # all needed ===============
-ri <- get_map("scituate, RI, united states", zoom = 10, color = "bw")
+ri <- get_map("new port, RI, united states", zoom = 9, color = "bw")
 aaa = ggmap(ri)
 data = aaa$data
 data$x = data$lon
@@ -46,7 +46,7 @@ ggmap(ri) +
     geom_boundary("county subdivision", fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("tract",state = "RI", data_fill = filldata, color = "red") +
+    geom_boundary("tract", data_fill = filldata, color = "red") +
     scale_fill_gradient(na.value = NA, low = "cyan", high = "orange")
 
 ggmap(ri) +
@@ -69,17 +69,17 @@ year = 2016
 data_fill = NULL
 
 ggmap(ri) +
-    geom_boundary("state", state = "RI", fill = NA, color = "red")
+    geom_boundary("state", state = c("RI", "NY"), fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("county", state = "RI", fill = NA, color = "red")
+    geom_boundary("county", state = c("RI", "CT"), fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("county subdivision", state = "RI", fill = NA, color = "red")
+    geom_boundary("county subdivision", state = c("RI", "CT"), fill = NA, color = "red")
 
 ggmap(ri) +
     geom_boundary("tract", state = "RI", data_fill = filldata, color = "red") +
-    scale_fill_gradient(na.value = NA, low = "green", high = "red")
+    scale_fill_gradient(na.value = NA, low = "orange", high = "cyan")
 
 ggmap(ri) +
     geom_boundary("block group", state = "RI", fill = NA, color = "red")
