@@ -3,29 +3,23 @@
 Draw TIGER census boundaries on ggmap
 =====================================
 
-This package draws and fills in TIGER census boundaries on ggmap with a single function geom\_bounday(). As an extension to ggplot2, geom\_boundary() works similarly to native ggplot2 geom\_xxxx() functions.
+This package draws TIGER census boundaries on ggmap with a single function `geom_bounday()`. As an extension to `ggplot2`, `geom_boundary()` works similarly to native ggplot2 `geom_xxxx()` functions.
 
-Installation and setup
-----------------------
+It currently draws boundaries of states, counties, county subdivisions, tracts, block groups, and zip code tabulation areas. More geographies are being added.
 
-### Installation
+Installation
+------------
 
 ``` r
 devtools::install_github("GL-Li/ggtiger")
 ```
 
-### Setup
-
-This package dowloads TIGER shape files into R with package `tigris`. The data is further processed and can be saved as `.csv` files in your own computer. You need to create a directory to store the processed data. Let's call the folder `my_tiger_data` and assume the full path to this folder is `xxxxx/my_tiger_data`. Run the function below to set the path for the package.
-
-``` r
-set_path_to_tiger("xxxxx/my_tiger_data")
-```
+This package dowloads TIGER shape files into R with package `tigris`. The data is further processed for plotting. If you want to speed up the plotting, save the processed data to your computer. Check with function `set_path_to_tiger()`.
 
 Examples
 --------
 
-By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap (for the lower 48 states). We can also choose to draw only those boundaries in a state, or in selected counties in a state within the map.
+By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap. We can also choose to draw only those boundaries in selected states, or in selected counties in a state within the map.
 
 ### Draw boundaries
 
@@ -35,13 +29,13 @@ Boundaries of state, county, county subdivision, tract, and block group:
 library(ggtiger)
 ri <- get_map("scituate, RI, united states", zoom = 10, color = "bw")
 ggmap(ri) +
-    # all tract boundaries in two counties in Rhode Islan
+    # all tract boundaries in two counties in Rhode Island
     geom_boundary("tract", state = "RI", county = c("providence", "washington"),
                   fill = NA, color = "orange", size = 0.2) +
-    # all county boundaries in Rhode Island
-    geom_boundary("county", state = "RI", fill = NA, 
+    # all county boundaries in the map
+    geom_boundary("county", fill = NA, 
                   color = "green", size = 0.3) +
-    # all state boundaries in the view
+    # all state boundaries in the map
     geom_boundary("state", fill = NA, linetype = "dotted", 
                   color = "red", size = 0.5)
 ```
@@ -65,7 +59,7 @@ ggmap(ri) +
 
 ### Fill in boudaries
 
-We can fill in boudaies using argument `data_fill` in `geom_boundary()`. The argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
+We can fill in boudaies using argument `data_fill` in `geom_boundary()`. This argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
 
 ``` r
 library(tidycensus)

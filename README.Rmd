@@ -49,10 +49,10 @@ ggmap(ri) +
     # all tract boundaries in two counties in Rhode Island
     geom_boundary("tract", state = "RI", county = c("providence", "washington"),
                   fill = NA, color = "orange", size = 0.2) +
-    # all county boundaries in Rhode Island
-    geom_boundary("county", state = "RI", fill = NA, 
+    # all county boundaries in the map
+    geom_boundary("county", fill = NA, 
                   color = "green", size = 0.3) +
-    # all state boundaries in the view
+    # all state boundaries in the map
     geom_boundary("state", fill = NA, linetype = "dotted", 
                   color = "red", size = 0.5)
 
