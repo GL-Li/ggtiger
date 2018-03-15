@@ -7,8 +7,8 @@ library(magrittr)
 library(maps)
 library(stringr)
 
-
-
+cambridge <- get_map("cambridge, MA, usa", zoom = 13, color = "bw")
+aaa <- ggmap(cambridge)
 # all needed ===============
 ri <- get_map("new port, RI, united states", zoom = 9, color = "bw")
 aaa = ggmap(ri)

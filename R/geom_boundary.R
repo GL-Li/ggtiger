@@ -246,27 +246,29 @@ StatBoundary <- ggproto(
 
         # merge with data_fill -------------------------------------------------
 
-        if (is.null(data_fill)){
+        datafill <- copy(data_fill)  # so do not change original data_fill
+
+        if (is.null(datafill)){
             # NA is is logic by default, have to be numeric
             dt[, fill := as.numeric(NA)]
         } else {
-            stopifnot(is.data.frame(data_fill))
-            if (!names(data_fill)[1] == "GEOID"){
+            stopifnot(is.data.frame(datafill))
+            if (!names(datafill)[1] == "GEOID"){
                 stop(paste('The first column of data_fill must be "GEOID" and',
                            "the second column is the numbers to fill."))
             }
 
             # tible gives headaches, turn to data.table
-            setDT(data_fill)
-            data_fill[, fill := data_fill[, 2]]
+            setDT(datafill)
+            datafill[, fill := datafill[, 2]]
 
             # two types of GEOID, long as 14000US44009051502 and
             # short as 44009051502. Match dt and data_fill' GEOID
-            if (all(grepl("US", data_fill$GEOID))){
-                data_fill[, GEOID := str_extract(GEOID, "[^(US)]*$")]
+            if (all(grepl("US", datafill$GEOID))){
+                datafill[, GEOID := str_extract(GEOID, "[^(US)]*$")]
             }
 
-            dt <- setDT(data_fill) %>%
+            dt <- setDT(datafill) %>%
                 .[dt, on = .(GEOID)]
         }
 
@@ -276,7 +278,7 @@ StatBoundary <- ggproto(
         dt[, group := factor(group)]
         # print(head(dt))
         # print(str(dt))
-        # bbb <<- dt
+        # bbb <<- copy(dt)
 
         dt
     }
