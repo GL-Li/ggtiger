@@ -108,6 +108,7 @@ Let's look at the black community near South Bend, Indiana. We present the popul
 
 ``` r
 library(totalcensus)
+library(magrittr)
 sb_black <- read_decennial(
     year = 2010,
     states = "IN",
