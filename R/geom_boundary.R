@@ -111,7 +111,8 @@ StatBoundary <- ggproto(
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "state", year = year) %>%
-                    .[state %in% states]
+                    .[state %in% states] %>%
+                    keep_geoid(bbox)
             }
         }
 
@@ -125,7 +126,8 @@ StatBoundary <- ggproto(
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "congressional district", year = year) %>%
-                    .[state %in% states]
+                    .[state %in% states]  %>%
+                    keep_geoid(bbox)
             }
 
         }
