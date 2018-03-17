@@ -42,6 +42,10 @@ download_shapefile <- function(state = NULL, geography, year = 2016, ...){
         NULL
     }
 
+    if (geography == "congressional district"){
+        dt <- download_CD(year = year, ...)
+    }
+
 
     return(dt)
 }
@@ -121,11 +125,6 @@ convert_shapefile <- function(shape){
 }
 
 
-download_places <- function(){
-    NULL
-}
-
-
 download_states <- function(year = 2016, ...){
     # all in one national file
     shape <- tigris::states(year = year, ...)
@@ -191,6 +190,44 @@ download_schooldistrict <- function(){
 download_cbsa <- function(){
     NULL
 }
+
+
+
+download_places <- function(){
+    NULL
+}
+
+
+
+download_CD <- function(year = 2016, ...){
+    # congressional district, one file for all states
+    cat("Downloading and unziping congressional district data. Be patient ...")
+    options(tigris_use_cache = TRUE)
+    shape <- tigris::congressional_districts(...)
+    combined <- convert_shapefile(shape)
+
+    # save data by state
+    path_to_tiger <- Sys.getenv("PATH_TO_TIGER")
+    if (!dir.exists(path_to_tiger)){
+        dir.create(path_to_tiger)
+    }
+    path_to_CD <- paste0(path_to_tiger, "/CD")
+    if (!dir.exists(path_to_CD)){
+        dir.create(path_to_CD)
+    }
+
+    states <- combined[, unique(state)]
+    for (st in states){
+        dt_st <- combined[state == st] %>%
+            .[, .(GEOID, state, x, y, group)]
+        file_name <- paste0(path_to_CD, "/", "CD_", st, "_", year, ".csv")
+        cat(paste0("Saving ", file_name, " ...\n"))
+        fwrite(dt_st, file = file_name)
+    }
+
+    return(combined[, .(GEOID, state, x, y, group)])
+}
+
 
 
 download_others <- function(state = NULL, geography, year = 2016, ...){

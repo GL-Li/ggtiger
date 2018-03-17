@@ -5,7 +5,7 @@ Draw TIGER census boundaries on ggmap
 
 This package draws TIGER census boundaries on ggmap with a single function `geom_bounday()`. As an extension to `ggplot2`, `geom_boundary()` works similarly to native ggplot2 `geom_xxxx()` functions.
 
-It currently draws boundaries of states, counties, county subdivisions, tracts, block groups, and zip code tabulation areas. More geographies are being added.
+It currently draws boundaries of states, counties, county subdivisions, tracts, block groups, zip code tabulation areas, and congressional districts. More geographies are being added.
 
 Installation
 ------------
@@ -20,6 +20,24 @@ Examples
 --------
 
 By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap. We can also choose to draw only those boundaries in selected states, or in selected counties in a state within the map.
+
+### New example: congressional district gerrymandering
+
+When Republicans or Demecrats are in charge, they tend to draw congressional disctricts boundaries to their favor. This can go very ugly, creating crazy boundaries by a practice called [gerrymandering](https://en.wikipedia.org/wiki/Gerrymandering).
+
+We can visualize the gerrymandering easily with `ggtiger`. The figure below shows a few congressional districts near Philadelpia in Pennsylvania for 115th Congress, including the (in)famous [7th congressional district](https://en.wikipedia.org/wiki/Pennsylvania%27s_7th_congressional_district).
+
+``` r
+library(ggtiger)
+philly <- get_map("pottstown, PA,  usa", zoom = 9, color = "bw")
+ggmap(philly) +
+    geom_boundary("congressional district", state = "PA",
+                  mapping = aes(fill = ..GEOID..),
+                  alpha = 0.7, color = "red", size = 0.3) +
+    scale_fill_brewer(palette = "PuOr")
+```
+
+![](figures/congressional_disctrict.png)
 
 ### Draw boundaries
 
@@ -59,17 +77,23 @@ ggmap(ri) +
 
 ### Fill in boudaries
 
-We can fill in boudaies using argument `data_fill` in `geom_boundary()`. This argument takes a data frame that has `GEOID` as the first column and fill-in values as the second column. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
+We can fill in boudaies using argument `data_fill` in `geom_boundary()`. This argument takes a data frame that has `GEOID` as the first column and fill-in values as the second or other columns. You can use argument `mapping = aes(fill = ..xxx..)` to specify the fill column. Remember to add two dots `..` before and after the column name. If the data frame is extracted using census packages such as `tidycensus` and `totalcensus`, it already has the `GEOID` column.
 
 ``` r
 library(tidycensus)
-library(dplyr)
-census_api_key("use your own census api key")
+census_api_key("your own api key")
 # get the median home value in Providence county, RI by tract
-home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") %>%
-    select(c("GEOID", "estimate"))
+home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") 
+head(home_value, 3)
+#    GEOID       NAME                                               variable   estimate   moe
+#    <chr>       <chr>                                              <chr>         <dbl> <dbl>
+#  1 44007000101 Census Tract 1.01, Providence County, Rhode Island B25077_001   155000  9765
+#  2 44007000102 Census Tract 1.02, Providence County, Rhode Island B25077_001   154700 11819
+#  3 44007000200 Census Tract 2, Providence County, Rhode Island    B25077_001   134600 31087
+
 ggmap(ri) +
     geom_boundary("tract", data_fill = home_value, 
+                  mapping = aes(fill = ..estimate..),
                   color = "blue", size = 0.1, alpha = 0.8) +
     geom_boundary("state", fill = NA, color = "red") +
     scale_fill_gradient(na.value = NA, low = "cyan", high = "orange") +

@@ -53,8 +53,9 @@ geom_boundary <- function(geography, data_fill = NULL, year = 2016,
 StatBoundary <- ggproto(
     "StatBoundary", Stat,
     required_aes = c("x", "y"),
-    default_aes = aes(group = ..group..,
-                      fill = ..fill..),
+    default_aes = aes(group = ..group..),
+    # default_aes = aes(group = ..group..,
+    #                   fill = ..fill..),
     compute_group = function(data, scales,
                              params, geography, data_fill, year, state, county, N){
 
@@ -112,6 +113,21 @@ StatBoundary <- ggproto(
                 dt <- download_shapefile(geography = "state", year = year) %>%
                     .[state %in% states]
             }
+        }
+
+
+        # congressional district ----------------------------------------------
+        if (geography %in% c("congressional district", "CD")){
+            states <- state_county[, unique(abbr)]
+            file_names <- paste0(path_to_tiger, "/CD/",
+                                 "CD_", states, "_", year, ".csv")
+            if (any(file.exists(file_names))){
+                dt <- get_existing(file_names, bbox)
+            } else {
+                dt <- download_shapefile(geography = "congressional district", year = year) %>%
+                    .[state %in% states]
+            }
+
         }
 
 
@@ -245,12 +261,17 @@ StatBoundary <- ggproto(
 
 
         # merge with data_fill -------------------------------------------------
+        # add a fill column for auto fill polygon, can manually fill with
+        # any column in geom_boundary(mapping = aes(fill = ..xxx..))
 
         datafill <- copy(data_fill)  # so do not change original data_fill
 
         if (is.null(datafill)){
             # NA is is logic by default, have to be numeric
-            dt[, fill := as.numeric(NA)]
+            #dt[, fill := as.numeric(NA)]
+            #dt[, fill := as.character(NA)]
+            #dt[, fill := NA]
+            NULL
         } else {
             stopifnot(is.data.frame(datafill))
             if (!names(datafill)[1] == "GEOID"){
