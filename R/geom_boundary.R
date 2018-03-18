@@ -7,8 +7,8 @@
 #' @param data_fill data frame to fill in the boundaries. It has GEOID as the
 #'     first column and the values to fill as the second column.
 #' @param year year of the shape files updated.
-#' @param state abbreviation of a state within which boudaries are drawn, such as "RI".
-#' @param county vector of county names of the state, such as c("providence", "kent")
+#' @param states abbreviation of a state within which boudaries are drawn, such as "RI".
+#' @param counties vector of county names of the state, such as c("providence", "kent")
 #' @param N integer when state is NULL, N x N grid points on the view of map are
 #'     used to determine the states and counties within the view.
 #' @param mapping same as those in ggplot functions, typically inherited from ggmap()
@@ -27,7 +27,7 @@
 
 
 geom_boundary <- function(geography, data_fill = NULL, year = 2016,
-                          state = NULL, county = NULL, N = 100,
+                          states = NULL, counties = NULL, N = 100,
                           mapping = NULL, data = NULL, geom = "polygon",
                           position = "identity", na.rm = FALSE, show.legend = NA,
                           inherit.aes = TRUE,
@@ -39,8 +39,8 @@ geom_boundary <- function(geography, data_fill = NULL, year = 2016,
         params = list(geography = geography,
                       data_fill = data_fill,
                       year = year,
-                      state = state,
-                      county = county,
+                      states = states,
+                      counties = counties,
                       N = N,
                       na.rm = na.rm,
                       ...)
@@ -57,7 +57,7 @@ StatBoundary <- ggproto(
     # default_aes = aes(group = ..group..,
     #                   fill = ..fill..),
     compute_group = function(data, scales,
-                             params, geography, data_fill, year, state, county, N){
+                             params, geography, data_fill, year, states, counties, N){
 
         if (Sys.getenv("PATH_TO_TIGER") == ""){
             message(paste0(
@@ -70,25 +70,25 @@ StatBoundary <- ggproto(
         path_to_tiger <- Sys.getenv("PATH_TO_TIGER")
 
 
-        if (!is.null(county)) county <- tolower(county)
+        if (!is.null(counties)) counties <- tolower(counties)
 
         bbox <- c(min(data$x), min(data$y), max(data$x), max(data$y))
         xlim <- c(bbox[1], bbox[3])
         ylim <- c(bbox[2], bbox[4])
 
         # find out all state-county pairs
-        if (is.null(state)){
+        if (is.null(states)){
             grid_points <- spread_coord(bbox, N)
             state_county <- get_coord_names(grid_points)
-        } else if (is.null(county)){
+        } else if (is.null(counties)){
             state_county <- data.table(
-                abbr = state,
+                abbr = states,
                 county = "all_counties"
             )
-        } else if (!is.null(county)){
+        } else if (!is.null(counties)){
             state_county <- data.table(
-                abbr = state,
-                county = county
+                abbr = states,
+                county = counties
             )
         }
 
@@ -104,14 +104,14 @@ StatBoundary <- ggproto(
         # state ---------------------------------------------------------------
 
         if (geography == "state"){
-            states <- state_county[, unique(abbr)]
+            uniq_states <- state_county[, unique(abbr)]
             file_names <- paste0(path_to_tiger, "/state/",
-                                "state_", states, "_", year, ".csv")
+                                "state_", uniq_states, "_", year, ".csv")
             if (any(file.exists(file_names))){
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "state", year = year) %>%
-                    .[state %in% states] %>%
+                    .[state %in% uniq_states] %>%
                     keep_geoid(bbox)
             }
         }
@@ -119,14 +119,14 @@ StatBoundary <- ggproto(
 
         # congressional district ----------------------------------------------
         if (geography %in% c("congressional district", "CD")){
-            states <- state_county[, unique(abbr)]
+            uniq_states <- state_county[, unique(abbr)]
             file_names <- paste0(path_to_tiger, "/CD/",
-                                 "CD_", states, "_", year, ".csv")
+                                 "CD_", uniq_states, "_", year, ".csv")
             if (any(file.exists(file_names))){
                 dt <- get_existing(file_names, bbox)
             } else {
                 dt <- download_shapefile(geography = "congressional district", year = year) %>%
-                    .[state %in% states]  %>%
+                    .[state %in% uniq_states]  %>%
                     keep_geoid(bbox)
             }
 
@@ -136,9 +136,9 @@ StatBoundary <- ggproto(
         # county----------------------------------------------------------------
 
         if (geography == "county"){
-            states <- state_county[, unique(abbr)]
+            uniq_states <- state_county[, unique(abbr)]
             file_names <- paste0(path_to_tiger, "/county/",
-                                 "county_", states, "_", year, "_all_counties.csv")
+                                 "county_", uniq_states, "_", year, "_all_counties.csv")
             if (any(file.exists(file_names))){
                 dt <- get_existing(file_names, bbox)
             } else {
@@ -146,9 +146,9 @@ StatBoundary <- ggproto(
                     keep_geoid(bbox)
             }
 
-            if (!is.null(county)){
+            if (!is.null(counties)){
                 dt <- dt[state_county, on = .(state = abbr, county)]
-            } else if (!is.null(state)){
+            } else if (!is.null(states)){
                 dt <- dt[state_county, on = .(state = abbr)]
             }
 
@@ -160,8 +160,8 @@ StatBoundary <- ggproto(
         # zip code -------------------------------------------------------------
 
         if (geography == "zip code"){
-            if (!is.null(state) & is.null(county)){
-                starts_with <- state_zipstart[abbr == state, ZCTA5]
+            if (!is.null(states) & is.null(counties)){
+                starts_with <- state_zipstart[abbr %in% states, ZCTA5]
             } else {
                 starts_with <- state_county_zipstart[state_county, on = .(abbr, county)] %>%
                     .[, unique(ZCTA5)]
@@ -199,12 +199,12 @@ StatBoundary <- ggproto(
 
 
             # further filter by state and county
-            if (!is.null(state) & !is.null(county)){
+            if (!is.null(states) & !is.null(counties)){
                 zipcode <- all_zipcode[state_county, on = .(abbr, county)] %>%
                     .[, .(ZCTA5 = unique(ZCTA5))]
                 dt <- dt[zipcode, on = .(GEOID = ZCTA5)]
             }
-            if (!is.null(state) & is.null(county)) {
+            if (!is.null(states) & is.null(counties)) {
                 zipcode <- all_zipcode[state_county, on = .(abbr)] %>%
                     .[, .(ZCTA5 = unique(ZCTA5))]
                 dt <- dt[zipcode, on = .(GEOID = ZCTA5)]
@@ -224,24 +224,24 @@ StatBoundary <- ggproto(
                              "block group")) {
 
 
-            states <- state_county[, unique(abbr)]
+            uniq_states <- state_county[, unique(abbr)]
 
             # process state by state
             dt_list <- list()
-            for (st in states){
-                counties <- state_county[abbr == st, unique(county)]
+            for (st in uniq_states){
+                uniq_counties <- state_county[abbr == st, unique(county)]
                 geo = str_replace(geography, " ", "_")
                 file_names <- paste0(
                     path_to_tiger, "/", geo, "/",
-                    geo, "_", st, "_", year, "_", counties,".csv"
+                    geo, "_", st, "_", year, "_", uniq_counties,".csv"
                 )
                 if (any(file.exists(file_names))){
                     dt <- get_existing(file_names, bbox)
                 } else {
                     dt <- download_shapefile(state = st, geography = geography, year = year) %>%
                         keep_geoid(bbox)
-                    if (sum(counties == "all_counties") == 0){
-                        dt <- dt[county %in% counties]
+                    if (sum(uniq_counties == "all_counties") == 0){
+                        dt <- dt[county %in% uniq_counties]
                     }
                 }
                 dt_list <- c(dt_list, list(dt))

@@ -70,24 +70,24 @@ year = 2016
 data_fill = NULL
 
 ggmap(ri) +
-    geom_boundary("state", state = c("RI", "NY"), fill = NA, color = "red")
+    geom_boundary("state", states = c("RI", "NY"), fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("county", state = c("RI", "CT"), fill = NA, color = "red")
+    geom_boundary("county", states = c("RI", "CT"), fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("county subdivision", state = c("RI", "CT"), fill = NA, color = "red")
+    geom_boundary("county subdivision", states = c("RI", "CT"), fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("tract", state = "RI", data_fill = filldata, color = "red",
+    geom_boundary("tract", states = "RI", data_fill = filldata, color = "red",
                   mapping = aes(fill = ..white_ratio..)) +
     scale_fill_gradient(na.value = NA, low = "orange", high = "cyan")
 
 ggmap(ri) +
-    geom_boundary("block group", state = "RI", fill = NA, color = "red")
+    geom_boundary("block group", states = "RI", fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("zip code", state = "RI", fill = "green", alpha = 0.3, color = "red")
+    geom_boundary("zip code", states = c("RI", "CT"), fill = "green", alpha = 0.3, color = "red")
 
 
 
@@ -100,21 +100,21 @@ year = 2016
 data_fill = NULL
 
 ggmap(ri) +
-    geom_boundary("zip code", state = "RI", county = c("providence", "washington"),
+    geom_boundary("zip code", states = "RI", counties = c("providence", "washington"),
                   fill = "green", alpha = 0.3, color = "red")
 
 
 ggmap(ri) +
-    geom_boundary("county subdivision", state = "RI", county = c("providence", "washington"),
+    geom_boundary("county subdivision", state = "RI", counties = c("providence", "washington"),
                   fill = NA, color = "red")
 
 ggmap(ri) +
-    geom_boundary("county", state = "RI", county = c("providence", "washington"),
+    geom_boundary("county", states = "RI", counties = c("providence", "washington"),
                   fill = NA, color = "red")
 
 
 ggmap(ri) +
-    geom_boundary("tract", state = "RI", county = c("providence", "washington"),
+    geom_boundary("tract", states = "RI", counties = c("providence", "washington"),
                   data_fill = filldata, alpha = 0.7,
                   mapping = aes(fill = ..white_ratio..)) +
     geom_boundary("county", color = "green", size = 0.5, fill = NA) +
@@ -123,7 +123,7 @@ ggmap(ri) +
     labs(fill = "ratio of\nwhite")
 
 ggmap(ri) +
-    geom_boundary("block group", state = "RI", county = c("providence", "washington"),
+    geom_boundary("block group", states = "RI", counties = c("providence", "washington"),
                   fill = NA, color = "red")
 
 
@@ -144,7 +144,7 @@ philly_zoom <- get_map("pheladlphia,PA, USA", zoom = 10, color = "bw")
 ggmap(philly_zoom) +
     geom_point(data = race, aes(lon, lat, size = population,
                                 color = white_pct), alpha = 0.3) +
-    geom_boundary("congressional district", state = "PA",
+    geom_boundary("congressional district", states = "PA",
                   #mapping = aes(fill = ..GEOID..),
                   alpha = 0.2, color = "blue", size = 0.2) +
     scale_fill_brewer(palette = "PuOr") +
@@ -152,14 +152,14 @@ ggmap(philly_zoom) +
     scale_color_gradient(low = "green", high = "red")
 
 ggmap(philly) +
-    geom_boundary("congressional district", state = "PA",
+    geom_boundary("congressional district", states = "PA",
                   mapping = aes(fill = ..GEOID..),
                   alpha = 0.7, color = "red", size = 0.3) +
     scale_fill_brewer(palette = "PuOr")
 
 
 ggmap(philly) +
-    geom_boundary("county", state = "PA", color = "green", fill = NA) +
+    geom_boundary("county", states = "PA", color = "green", fill = NA) +
     scale_fill_brewer(palette = "PuOr")
 
 ggmap(philly) +

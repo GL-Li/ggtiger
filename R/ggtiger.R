@@ -8,6 +8,7 @@
 #' @import data.table
 #' @import maps
 #' @import tigris
+#' @import totalcensus
 #' @importFrom magrittr "%>%"
 #' @importFrom rgdal readOGR
 #' @importFrom broom tidy

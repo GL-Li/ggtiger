@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/GL-Li/ggtiger.svg?branch=master)](https://travis-ci.org/GL-Li/ggtiger)
 
-Draw TIGER census boundaries on ggmap
-=====================================
+Draw TIGER census boundaries and plot census data on ggmap
+==========================================================
 
 This package draws TIGER census boundaries on ggmap with a single function `geom_bounday()`. As an extension to `ggplot2`, `geom_boundary()` works similarly to native ggplot2 `geom_xxxx()` functions.
 
@@ -31,13 +31,35 @@ We can visualize the gerrymandering easily with `ggtiger`. The figure below show
 library(ggtiger)
 philly <- get_map("pottstown, PA,  usa", zoom = 9, color = "bw")
 ggmap(philly) +
-    geom_boundary("congressional district", state = "PA",
+    geom_boundary("congressional district", states = "PA",
                   mapping = aes(fill = ..GEOID..),
                   alpha = 0.7, color = "red", size = 0.3) +
     scale_fill_brewer(palette = "PuOr")
 ```
 
 ![](figures/congressional_disctrict.png)
+
+Even better, with function `geom_census()`, we can plot demographics on the map. This function depends on package `totalcensus`. Please visit [this repo](https://github.com/GL-Li/totalcensus) to find out how to use it.
+
+``` r
+library(viridis)
+ggmap(philly) +
+    # plot demographic at each census block as a point, sized by population
+    # and colored by ratio of white people
+    geom_census("decennial", year = 2010, states = "PA",
+                table_contents = "white = P0030002",
+                summary_level = "block",
+                mapping = aes(color = ..white../..population..)) +
+    # draw congressional district boundaries
+    geom_boundary("congressional district", states = "PA",
+                  fill = NA, color = "red", size = 0.2) +
+    scale_size_area(max_size = 1) +   
+    scale_color_viridis() +
+    guides(size = "none") +  
+    labs(color = "ratio of\nwhite")
+```
+
+![](figures/congressional_disctrict_census.png)
 
 ### Draw boundaries
 
@@ -48,7 +70,7 @@ library(ggtiger)
 ri <- get_map("scituate, RI, united states", zoom = 10, color = "bw")
 ggmap(ri) +
     # all tract boundaries in two counties in Rhode Island
-    geom_boundary("tract", state = "RI", county = c("providence", "washington"),
+    geom_boundary("tract", states = "RI", counties = c("providence", "washington"),
                   fill = NA, color = "orange", size = 0.2) +
     # all county boundaries in the map
     geom_boundary("county", fill = NA, 
@@ -65,8 +87,8 @@ Boundaries of ZCTA (zip code tabulation area, based on zip code): be aware that 
 ``` r
 ggmap(ri) +
     # all ZCTAs in or partially in two counties in Rhode Island
-    geom_boundary("zip code", state = "RI", 
-                  county = c("providence", "washington"),
+    geom_boundary("zip code", states = "RI", 
+                  counties = c("providence", "washington"),
                   fill = "blue", alpha = 0.1, color = "red", size = 0.3) +
     # all county boundaries in RI. 
     geom_boundary("county", state = "RI", fill = NA, color = "green", 
