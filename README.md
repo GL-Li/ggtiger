@@ -3,9 +3,11 @@
 Draw TIGER census boundaries and plot census data on ggmap
 ==========================================================
 
-This package draws TIGER census boundaries on ggmap with a single function `geom_bounday()`. As an extension to `ggplot2`, `geom_boundary()` works similarly to native ggplot2 `geom_xxxx()` functions.
+This package draws TIGER census boundaries on ggmap with a single function `geom_bounday()` and plot census data on map with `geom_census()`. As extensions to `ggplot2`, `geom_boundary()` and `geom_census()` work similarly to native ggplot2 `geom_xxxx()` functions.
 
 It currently draws boundaries of states, counties, county subdivisions, tracts, block groups, zip code tabulation areas, and congressional districts. More geographies are being added.
+
+It now plot census data of 2010 decennial census, 2015, 2016 ACS 5-year survey, and 2014, 2015, 2016 ACS 1-year survey.
 
 Installation and setup
 ----------------------
@@ -13,8 +15,6 @@ Installation and setup
 ``` r
 devtools::install_github("GL-Li/ggtiger")
 ```
-
-This package has two major functions: `geom_boundary()` to draw census boundaries and `geom_census()` to draw census data as point on ggmap.
 
 Function `geom_boundary()` dowloads TIGER shape files into R with package `tigris`. The data is further processed for plotting. If you want to speed up the plotting, save the processed data to your computer. Check with function `set_path_to_tiger()`.
 
