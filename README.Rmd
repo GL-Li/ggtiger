@@ -28,17 +28,22 @@ This package draws TIGER census boundaries on ggmap with a single function `geom
 It currently draws boundaries of states, counties, county subdivisions, tracts, block groups, zip code tabulation areas, and congressional districts. More geographies are being added.
 
 
-## Installation
+## Installation and setup
 
 ```{r eval = FALSE}
 devtools::install_github("GL-Li/ggtiger")
 ```
 
-This package dowloads TIGER shape files into R with package `tigris`. The data is further processed for plotting. If you want to speed up the plotting, save the processed data to your computer. Check with function `set_path_to_tiger()`. 
+This package has two major functions: `geom_boundary()` to draw census boundaries and `geom_census()` to draw census data as point on ggmap.
 
+Function `geom_boundary()` dowloads TIGER shape files into R with package `tigris`. The data is further processed for plotting. If you want to speed up the plotting, save the processed data to your computer. Check with function `set_path_to_tiger()`. 
+
+Function `geom_census()` uses package `totalcensus` to process census data, which requires downloading census data to your computer. Follow the [instructions](https://github.com/GL-Li/totalcensus) to install and set up `totalcensus` package.
 
 ## Examples
 By default, `geom_boundary()` draws all boundaries of a geography in the view of a ggmap. We can also choose to draw only those boundaries in selected states, or in selected counties in a state within the map.
+
+Similarly, `geom_census` plot all available data points in the map. We can also choose which states and area to plot.
 
 ### New example: congressional district gerrymandering
 When Republicans or Demecrats are in charge, they tend to draw congressional disctricts boundaries to their favor. This can go very ugly, creating crazy boundaries by a practice called [gerrymandering](https://en.wikipedia.org/wiki/Gerrymandering). 
