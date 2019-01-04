@@ -10,6 +10,8 @@ library(viridis)
 # download map near philly in PA
 philly <- get_map("pottstown, PA,  usa", zoom = 9, color = "bw")
 
+ggmap(philly)
+
 ### congressional district boudaries
 ggmap(philly) +
     geom_boundary("congressional district", states = "PA",

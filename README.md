@@ -35,6 +35,7 @@ We can visualize the gerrymandering easily with `ggtiger`. The figure below show
 
 ``` r
 library(ggtiger)
+register_google(Sys.getenv("GOOGLE_API"))
 philly <- get_map("pottstown, PA,  usa", zoom = 9, color = "bw")
 ggmap(philly) +
     geom_boundary("congressional district", states = "PA",
