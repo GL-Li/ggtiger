@@ -52,7 +52,7 @@ We can visualize the gerrymandering easily with `ggtiger`. The figure below show
 
 ```{r}
 library(ggtiger)
-register_google(Sys.getenv("GOOGLE_API"))
+register_google(Sys.getenv("GGMAP_GOOGLE_API_KEY"))
 philly <- get_map("pottstown, PA,  usa", zoom = 9, color = "bw")
 ggmap(philly) +
     geom_boundary("congressional district", states = "PA",
@@ -126,7 +126,7 @@ We can fill in boudaies using argument `data_fill` in `geom_boundary()`. This ar
 
 ```{r fig.width=12}
 library(tidycensus)
-census_api_key("your own api key")
+census_api_key(Sys.getenv("CENSUS_API_KEY"))  # use your own census API key
 # get the median home value in Providence county, RI by tract
 home_value <- get_acs("tract", "B25077_001", state = "RI", county = "Providence") 
 head(home_value, 3)

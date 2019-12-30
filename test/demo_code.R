@@ -1,6 +1,7 @@
 
 library(ggtiger)
 library(viridis)
+register_google(Sys.getenv("GGMAP_GOOGLE_API_KEY"))
 
 # load saved ggmaps
 # load("meetup_Boston_data_vis_20180319/saved_maps.RData")
