@@ -33,7 +33,7 @@ download_shapefile <- function(state = NULL, geography, year = 2016, ...){
         NULL
     }
     if (geography %in% c("county subdivision", "tract", "block group")){
-        dt <- download_others(state = state, geography, year = 2016, ...)
+        dt <- download_others(state = state, geography, year = year, ...)
     }
     if (geography == "zip code"){
         dt = download_zipcode(starts_with = starts_with, year = year, ...)
